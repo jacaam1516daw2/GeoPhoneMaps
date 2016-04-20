@@ -1,3 +1,6 @@
+/**
+ * phonegap plugin add org.apache.cordova.geolocation
+ */
 var watchID = null;
 
 var app = {
