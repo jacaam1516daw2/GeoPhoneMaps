@@ -3,6 +3,14 @@
  */
 var watchID = null;
 
+var bdLatLng = [{
+    id: "",
+    lat: "",
+    lng: "",
+    rest: ""
+}];
+
+var list = [];
 var app = {
     // Constructor
     initialize: function () {
@@ -38,15 +46,23 @@ var app = {
         var len = resultats.rows.length;
         var sortida = '';
         for (var i = 0; i < len; i++) {
-            console.log('id: ' + resultats.rows.item(i).id);
-            console.log('latitud: ' + resultats.rows.item(i).latitud);
-            console.log('longitud: ' + resultats.rows.item(i).longitud);
-            console.log('restaurant: ' + resultats.rows.item(i).restaurant);
+            bdLatLng.id = resultats.rows.item(i).id;
+            bdLatLng.lat = resultats.rows.item(i).latitud;
+            bdLatLng.lon = resultats.rows.item(i).longitud;
+            bdLatLng.rest = resultats.rows.item(i).restaurant;
+
+            list.push(bdLatLng.lat + ', ' + bdLatLng.lon);
         }
     },
     desar: function () {
         db.transaction(function (tx) {
             tx.executeSql('DELETE FROM LLISTA');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.453765", "2.251968", "restaurant1")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.454553", "2.253363", "restaurant2")');
+
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.455181", "2.227799", "restaurant1")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.454751", "2.227048", "restaurant2")');
+
             tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.413985", "2.189674", "restaurant1")');
             tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.415729", "2.189676", "restaurant2")');
             tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.414073", "2.192863", "restaurant3")');
@@ -54,11 +70,10 @@ var app = {
     },
     //callback per a quan obtenim les dades de l'accelerometre
     onSuccess: function (posicio) {
-        var bdLatLng = {
-            lat: "",
-            lng: "",
-            rest: ""
-        }
+        var myLatLng = {
+            lat: 0,
+            lng: 0
+        };
         var latLng =
             new google.maps.LatLng(
                 posicio.coords.latitude,
@@ -78,14 +93,16 @@ var app = {
             position: latLng,
             map: mapa
         });
-        marker = new google.maps.Marker({
-            position: myLatLng,
-            map: mapa
-        });
-        marker = new google.maps.Marker({
-            position: myLatLng2,
-            map: mapa
-        });
+        for (var x = 0; x < list.length; x++) {
+            var elem = list[x].split(',');
+            myLatLng.lat = parseFloat(elem[0]);
+            myLatLng.lng = parseFloat(elem[1])
+            console.log(myLatLng);
+            marker = new google.maps.Marker({
+                position: myLatLng,
+                map: mapa
+            });
+        }
     },
     //callback per a un cas d'error
     onError: function (error) {
