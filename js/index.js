@@ -60,12 +60,12 @@ var app = {
             tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.453765", "2.251968", "restaurant1")');
             tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.454553", "2.253363", "restaurant2")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.455181", "2.227799", "restaurant1")');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.454751", "2.227048", "restaurant2")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.455181", "2.227799", "restaurant3")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.454751", "2.227048", "restaurant4")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.413985", "2.189674", "restaurant1")');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.415729", "2.189676", "restaurant2")');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.414073", "2.192863", "restaurant3")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.413985", "2.189674", "restaurant5")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.415729", "2.189676", "restaurant6")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.414073", "2.192863", "restaurant7")');
         }, app.error, app.obtenirItems);
     },
     //callback per a quan obtenim les dades de l'accelerometre
