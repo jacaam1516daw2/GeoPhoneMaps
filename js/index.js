@@ -55,7 +55,7 @@ var app = {
             bdLatLng.foto = resultats.rows.item(i).foto;
             bdLatLng.descripcion = resultats.rows.item(i).descripcion;
 
-            list.push(bdLatLng.lat + ', ' + bdLatLng.lon + ', ' + bdLatLng.rest + ', ' + bdLatLng.foto + ', ' + bdLatLng.descripcion);
+            list.push(bdLatLng.lat + ', ' + bdLatLng.lon + ', ' + bdLatLng.rest + ', ' + bdLatLng.foto + ', ' + bdLatLng.descripcion + ', ' + bdLatLng.id);
         }
     },
     desar: function () {
@@ -103,43 +103,46 @@ var app = {
             document.getElementById('mapa'),
             opcionsMapa
         );
-        var marker = new google.maps.Marker({
-            position: latLng,
-            map: mapa
-        });
 
-        var infowindow;
+        /* var marker1 = new google.maps.Marker({
+             position: latLng,
+             map: mapa
+         });*/
 
-        for (var x = 0; x < list.length; x++) {
-            var elem = list[x].split(',');
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+
+        for (i = 0; i < list.length; i++) {
+            var elem = list[i].split(',');
             myLatLng.lat = parseFloat(elem[0]);
             myLatLng.lng = parseFloat(elem[1]);
             myLatLng.rest = elem[2];
             myLatLng.foto = elem[3];
             myLatLng.descripcion = elem[4];
+            myLatLng.id = elem[5];
 
             marker = new google.maps.Marker({
-                position: myLatLng,
-                map: mapa
+                position: new google.maps.LatLng(myLatLng.lat, myLatLng.lng),
+                map: mapa,
+                id: myLatLng.id,
+                lat: myLatLng.lat,
+                lng: myLatLng.lng,
+                rest: myLatLng.rest,
+                foto: myLatLng.foto,
+                descripcion: myLatLng.descripcion
+
             });
 
-            marker.addListener('click', function () {
-                /*  for (var x = 0; x < list.length; x++) {
-                      var elem = list[x].split(',');
-                      myLatLng.lat = parseFloat(elem[0]);
-                      myLatLng.lng = parseFloat(elem[1]);
-                      myLatLng.rest = elem[2];
-                      myLatLng.foto = elem[3];
-                      myLatLng.descripcion = elem[4];
-                  }*/
-                var contentString = "<div id='content'><h1 id='firstHeading' class='firstHeading'>" + myLatLng.rest + "</h1><div id='bodyContent'><p><b>" + myLatLng.rest + "</b>," + myLatLng.descripcion + "</p></div></div>";
-                infowindow = new google.maps.InfoWindow({
-                    content: contentString
-                });
-                var element = document.getElementById('info');
-                element.innerHTML = "<img src=" + myLatLng.foto + " width=360 height=150><div id='infoText'>" + contentString + "</div>";
-                infowindow.open(mapa, marker);
-            });
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                return function () {
+                    var contentString = "<div id='content'><h1 id='firstHeading' class='firstHeading'>" + marker.rest + "</h1><div id='bodyContent'><p><b>" + marker.rest + "</b>," + marker.descripcion + "</p></div></div>";
+                    infowindow.setContent(contentString);
+                    infowindow.open(mapa, marker);
+                    var element = document.getElementById('info');
+                    element.innerHTML = "<img src=" + marker.foto + " width=360 height=150><div id='infoText'>" + contentString + "</div>";
+                }
+            })(marker, i));
         }
     },
     //callback per a un cas d'error
