@@ -104,14 +104,15 @@ var app = {
             opcionsMapa
         );
 
-        /* var marker1 = new google.maps.Marker({
-             position: latLng,
-             map: mapa
-         });*/
-
         var infowindow = new google.maps.InfoWindow();
 
         var marker, i;
+
+        marker1 = new google.maps.Marker({
+            position: latLng,
+            map: mapa,
+            icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        });
 
         for (i = 0; i < list.length; i++) {
             var elem = list[i].split(',');
