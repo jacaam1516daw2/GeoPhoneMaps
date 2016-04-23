@@ -137,11 +137,11 @@ var app = {
 
             google.maps.event.addListener(marker, 'click', (function (marker, i) {
                 return function () {
-                    var contentString = "<div id='content'><h1 id='firstHeading' class='firstHeading'>" + marker.rest + "</h1><div id='bodyContent'><p><b>" + marker.rest + "</b>," + marker.descripcion + "</p></div></div>";
+                    var contentString = "<div id='content'><h1 id='firstHeading' class='firstHeading'>" + marker.rest + "</h1><div id='bodyContent'><b><p class='bg-primary'>" + marker.rest + "</p></b><br>" + marker.descripcion + "</p></div></div>";
                     infowindow.setContent(contentString);
                     infowindow.open(mapa, marker);
                     var element = document.getElementById('info');
-                    element.innerHTML = "<img src=" + marker.foto + " width=360 height=150><div id='infoText'>" + contentString + "</div>";
+                    element.innerHTML = "<img src=" + marker.foto + " width=360 height=150 class='img-circle'><div id='infoText'>" + contentString + "</div>";
                 }
             })(marker, i));
         }
