@@ -7,7 +7,9 @@ var bdLatLng = [{
     id: "",
     lat: "",
     lng: "",
-    rest: ""
+    rest: "",
+    foto: "",
+    descripcion: ""
 }];
 
 var list = [];
@@ -29,8 +31,8 @@ var app = {
         //BD
         db = app.obtenirBaseDades();
         db.transaction(function (tx) {
-            //tx.executeSql('DROP TABLE LLISTA');
-            tx.executeSql('CREATE TABLE IF NOT EXISTS LLISTA(id INTEGER PRIMARY KEY AUTOINCREMENT, latitud, longitud, restaurant)');
+            // tx.executeSql('DROP TABLE LLISTA');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS LLISTA(id INTEGER PRIMARY KEY AUTOINCREMENT, latitud, longitud, restaurant, foto, descripcion)');
         }, app.error, app.desar());
 
     },
@@ -50,29 +52,41 @@ var app = {
             bdLatLng.lat = resultats.rows.item(i).latitud;
             bdLatLng.lon = resultats.rows.item(i).longitud;
             bdLatLng.rest = resultats.rows.item(i).restaurant;
+            bdLatLng.foto = resultats.rows.item(i).foto;
+            bdLatLng.descripcion = resultats.rows.item(i).descripcion;
 
-            list.push(bdLatLng.lat + ', ' + bdLatLng.lon);
+            list.push(bdLatLng.lat + ', ' + bdLatLng.lon + ', ' + bdLatLng.rest + ', ' + bdLatLng.foto + ', ' + bdLatLng.descripcion);
         }
     },
     desar: function () {
         db.transaction(function (tx) {
             tx.executeSql('DELETE FROM LLISTA');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.453765", "2.251968", "restaurant1")');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.454553", "2.253363", "restaurant2")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.455181", "2.227799", "restaurant3")');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.454751", "2.227048", "restaurant4")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.453765", "2.251968", "Restaurant1", "http://www.hotelatalaia.com/images/restaurante.jpg", "Gran Restaurante de degustación con 230 años de experiencia")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.413985", "2.189674", "restaurant5")');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.415729", "2.189676", "restaurant6")');
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant) VALUES ("41.414073", "2.192863", "restaurant7")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.454553", "2.253363", "Restaurant2", "https://media-cdn.tripadvisor.com/media/photo-s/01/a4/35/6e/restaurante-argentino.jpg", "Gran Restaurante de degustación con 1230 años de experiencia")');
+
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.455181", "2.227799", "Restaurant3", "http://images.sonesta.com/method=get&s=DCBCCB24-0A58-D3A2-88DD93070D5ACB20.JPG", "Pequeño Restaurante con comida de muy mala calidad y muy caro")');
+
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.454751", "2.227048", "Restaurant4", "http://www.hoteles-silken.com/content/imgsxml/es/galerias/panel_restaurants_list/1/hoteles-puertamalaga-restaurante-restaurante-panoramica.jpg", "Hamburguesas a mitad de precio")');
+
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.413985", "2.189674", "Restaurant5", "http://www.segurocomercioonline.com/wp-content/uploads/2015/06/restaurantes.jpg", "Actuaciones en directo")');
+
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.415729", "2.189676", "Restaurant6", "http://ideas4all.com/ideas/0000/1013/restaurante2.jpg", "Restaurante de alta cocina")');
+
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.414073", "2.192863", "Restaurant7", "http://www.gruposagardi.com/admin/restaurantes/153987076comedor_bodega_sagardi_restaurante_vasco_argentina.JPG", "Tenemos a los mejores expertos")');
+
         }, app.error, app.obtenirItems);
     },
     //callback per a quan obtenim les dades de l'accelerometre
     onSuccess: function (posicio) {
         var myLatLng = {
             lat: 0,
-            lng: 0
+            lng: 0,
+            id: "",
+            rest: "",
+            foto: "",
+            descripcion: ""
         };
         var latLng =
             new google.maps.LatLng(
@@ -91,49 +105,40 @@ var app = {
         );
         var marker = new google.maps.Marker({
             position: latLng,
-            map: mapa,
-            title: 'Uluru (Ayers Rock)'
+            map: mapa
         });
 
-        var contentString = '<div id="content">' +
-            '<div id="siteNotice">' +
-            '</div>' +
-            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>' +
-            '<div id="bodyContent">' +
-            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-            'sandstone rock formation in the southern part of the ' +
-            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) ' +
-            'south west of the nearest large town, Alice Springs; 450&#160;km ' +
-            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major ' +
-            'features of the Uluru - Kata Tjuta National Park. Uluru is ' +
-            'sacred to the Pitjantjatjara and Yankunytjatjara, the ' +
-            'Aboriginal people of the area. It has many springs, waterholes, ' +
-            'rock caves and ancient paintings. Uluru is listed as a World ' +
-            'Heritage Site.</p>' +
-            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">' +
-            'https://en.wikipedia.org/w/index.php?title=Uluru</a> ' +
-            '(last visited June 22, 2009).</p>' +
-            '</div>' +
-            '</div>';
-
-        var infowindow = new google.maps.InfoWindow({
-            content: contentString
-        });
-
-        marker.addListener('click', function () {
-            var element = document.getElementById('info');
-            element.innerHTML = "<img src=img/logo.png width=360 height=150>";
-            infowindow.open(mapa, marker);
-        });
+        var infowindow;
 
         for (var x = 0; x < list.length; x++) {
             var elem = list[x].split(',');
             myLatLng.lat = parseFloat(elem[0]);
-            myLatLng.lng = parseFloat(elem[1])
+            myLatLng.lng = parseFloat(elem[1]);
+            myLatLng.rest = elem[2];
+            myLatLng.foto = elem[3];
+            myLatLng.descripcion = elem[4];
 
             marker = new google.maps.Marker({
                 position: myLatLng,
                 map: mapa
+            });
+
+            marker.addListener('click', function () {
+                /*  for (var x = 0; x < list.length; x++) {
+                      var elem = list[x].split(',');
+                      myLatLng.lat = parseFloat(elem[0]);
+                      myLatLng.lng = parseFloat(elem[1]);
+                      myLatLng.rest = elem[2];
+                      myLatLng.foto = elem[3];
+                      myLatLng.descripcion = elem[4];
+                  }*/
+                var contentString = "<div id='content'><h1 id='firstHeading' class='firstHeading'>" + myLatLng.rest + "</h1><div id='bodyContent'><p><b>" + myLatLng.rest + "</b>," + myLatLng.descripcion + "</p></div></div>";
+                infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+                var element = document.getElementById('info');
+                element.innerHTML = "<img src=" + myLatLng.foto + " width=360 height=150><div id='infoText'>" + contentString + "</div>";
+                infowindow.open(mapa, marker);
             });
         }
     },

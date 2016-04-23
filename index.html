@@ -30,12 +30,17 @@
         body {
             height: 100%;
             margin: 0;
-            padding: 0
+            padding: 0;
         }
 
         #mapa {
             height: 100%;
             width: 100%;
+        }
+
+        #infoText {
+            margin: -10% 35%;
+            float: right;
         }
 
     </style>
@@ -47,8 +52,11 @@
         <a class="icon icon-compose pull-right"></a>
         <h1 class="title">Mapes</h1>
     </header>
+    <div id="cont">
+        <div id="info"></div>
+        <div id="infoText"></div>
+    </div>
     <div id="mapa"></div>
-    <div id="info"></div>
 </body>
 
 </html>
