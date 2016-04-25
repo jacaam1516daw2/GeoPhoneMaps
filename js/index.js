@@ -13,6 +13,19 @@ var bdLatLng = [{
 }];
 
 var list = [];
+
+function changeFunc() {
+    var selectBox = document.getElementById("selectBox");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+}
+
+
+var options = {
+    timeout: 31000,
+    enableHighAccuracy: true,
+    maximumAge: 90000
+};
+
 var app = {
     // Constructor
     initialize: function () {
@@ -26,15 +39,14 @@ var app = {
     // callback per a esdeveiniment deviceready
     // this representa l'esdeveniment
     onDeviceReady: function () {
-        navigator.geolocation.getCurrentPosition(app.onSuccess, app.onError);
+        navigator.geolocation.getCurrentPosition(app.onSuccess, app.onError, options);
         //watchID =  navigator.geolocation.watchPosition(onSuccess, onError, options);
         //BD
         db = app.obtenirBaseDades();
         db.transaction(function (tx) {
             // tx.executeSql('DROP TABLE LLISTA');
-            tx.executeSql('CREATE TABLE IF NOT EXISTS LLISTA(id INTEGER PRIMARY KEY AUTOINCREMENT, latitud, longitud, restaurant, foto, descripcion)');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS LLISTA(id INTEGER PRIMARY KEY AUTOINCREMENT, latitud, longitud, restaurant, foto, descripcion, tipo)');
         }, app.error, app.desar());
-
     },
     obtenirBaseDades: function () {
         return window.openDatabase("llistaBD", "1.0", "Llista BD", 200000);
@@ -62,22 +74,23 @@ var app = {
         db.transaction(function (tx) {
             tx.executeSql('DELETE FROM LLISTA');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.453765", "2.251968", "Restaurant1", "http://www.hotelatalaia.com/images/restaurante.jpg", "Gran Restaurante de degustación con 230 años de experiencia")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion, tipo) VALUES ("41.453765", "2.251968", "Restaurant1", "http://www.hotelatalaia.com/images/restaurante.jpg", "Gran Restaurante de degustación con 230 años de experiencia", "A")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.454553", "2.253363", "Restaurant2", "https://media-cdn.tripadvisor.com/media/photo-s/01/a4/35/6e/restaurante-argentino.jpg", "Gran Restaurante de degustación con 1230 años de experiencia")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion, tipo) VALUES ("41.454553", "2.253363", "Restaurant2", "https://media-cdn.tripadvisor.com/media/photo-s/01/a4/35/6e/restaurante-argentino.jpg", "Gran Restaurante de degustación con 1230 años de experiencia", "B")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.455181", "2.227799", "Restaurant3", "http://images.sonesta.com/method=get&s=DCBCCB24-0A58-D3A2-88DD93070D5ACB20.JPG", "Pequeño Restaurante con comida de muy mala calidad y muy caro")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion, tipo) VALUES ("41.455181", "2.227799", "Restaurant3", "http://images.sonesta.com/method=get&s=DCBCCB24-0A58-D3A2-88DD93070D5ACB20.JPG", "Pequeño Restaurante con comida de muy mala calidad y muy caro", "C")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.454751", "2.227048", "Restaurant4", "http://www.hoteles-silken.com/content/imgsxml/es/galerias/panel_restaurants_list/1/hoteles-puertamalaga-restaurante-restaurante-panoramica.jpg", "Hamburguesas a mitad de precio")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion, tipo) VALUES ("41.454751", "2.227048", "Restaurant4", "http://www.hoteles-silken.com/content/imgsxml/es/galerias/panel_restaurants_list/1/hoteles-puertamalaga-restaurante-restaurante-panoramica.jpg", "Hamburguesas a mitad de precio", "D")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.413985", "2.189674", "Restaurant5", "http://www.segurocomercioonline.com/wp-content/uploads/2015/06/restaurantes.jpg", "Actuaciones en directo")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion, tipo) VALUES ("41.413985", "2.189674", "Restaurant5", "http://www.segurocomercioonline.com/wp-content/uploads/2015/06/restaurantes.jpg", "Actuaciones en directo", "D")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.415729", "2.189676", "Restaurant6", "http://ideas4all.com/ideas/0000/1013/restaurante2.jpg", "Restaurante de alta cocina")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion, tipo) VALUES ("41.415729", "2.189676", "Restaurant6", "http://ideas4all.com/ideas/0000/1013/restaurante2.jpg", "Restaurante de alta cocina", "A")');
 
-            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion) VALUES ("41.414073", "2.192863", "Restaurant7", "http://www.gruposagardi.com/admin/restaurantes/153987076comedor_bodega_sagardi_restaurante_vasco_argentina.JPG", "Tenemos a los mejores expertos")');
+            tx.executeSql('INSERT INTO LLISTA (latitud, longitud, restaurant, foto, descripcion, tipo) VALUES ("41.414073", "2.192863", "Restaurant7", "http://www.gruposagardi.com/admin/restaurantes/153987076comedor_bodega_sagardi_restaurante_vasco_argentina.JPG", "Tenemos a los mejores expertos", "B")');
 
         }, app.error, app.obtenirItems);
     },
+
     //callback per a quan obtenim les dades de l'accelerometre
     onSuccess: function (posicio) {
         var myLatLng = {
@@ -141,7 +154,7 @@ var app = {
                     infowindow.setContent(contentString);
                     infowindow.open(mapa, marker);
                     var element = document.getElementById('info');
-                    element.innerHTML = "<img src=" + marker.foto + " width=360 height=150 class='img-circle'><div id='infoText'>" + contentString + "</div>";
+                    element.innerHTML = "<img src=" + marker.foto + " width=120 height=90 class='img-circle'><div id='infoText'>" + contentString + "</div>";
                 }
             })(marker, i));
         }
